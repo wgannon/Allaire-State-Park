@@ -14,7 +14,46 @@
 	<body>
         
         <div id="mapid"></div>
-    
+    	<div class="CDB-infowindow CDB-infowindow--light js-infowindow">
+  <div class="CDB-infowindow-close js-close"></div>
+  <div class="CDB-infowindow-container">
+    <div class="CDB-infowindow-header CDB-infowindow-headerBg CDB-infowindow-headerBg--light js-header" style="background: #35AAE5;">
+      
+      <ul class="CDB-infowindow-list">
+        <li class="CDB-infowindow-listItem">
+          <h5 class="CDB-infowindow-subtitle">trail_name</h5>
+          <h4 class="CDB-infowindow-title ">
+            {{trail_name}}
+          </h4>
+        </li>
+      </ul>
+    </div>
+    <div class="CDB-infowindow-inner js-inner">
+      <ul class="CDB-infowindow-list js-content">
+        <li class="CDB-infowindow-listItem">
+          <h5 class="CDB-infowindow-subtitle">trl_color</h5>
+          <h4 class="CDB-infowindow-title">{{trl_color}}</h4>
+        </li>
+        <li class="CDB-infowindow-listItem">
+          <h5 class="CDB-infowindow-subtitle">blaze_type</h5>
+          <h4 class="CDB-infowindow-title">{{blaze_type}}</h4>
+        </li>
+        <li class="CDB-infowindow-listItem">
+          <h5 class="CDB-infowindow-subtitle">trl_type_s</h5>
+          <h4 class="CDB-infowindow-title">{{trl_type_s}}</h4>
+        </li>
+        <li class="CDB-infowindow-listItem">
+          <h5 class="CDB-infowindow-subtitle">park_websi</h5>
+          <h4 class="CDB-infowindow-title">{{park_websi}}</h4>
+        </li>
+      </ul>
+    </div>
+    <div class="CDB-hook">
+      <div class="CDB-hook-inner"></div>
+    </div>
+  </div>
+</div>
+
 
         
         <!--you can also use this space for internal scripts or stylesheets;
