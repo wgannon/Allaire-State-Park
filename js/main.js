@@ -22,24 +22,27 @@ var client = new carto.Client({
 
 
 // returns the version of the library
-const source = new carto.source.Dataset('allairestatepark');
-console.log(source);
+const trails = new carto.source.Dataset('allairestatepark');
+console.log(trails);
 const style = new carto.style.CartoCSS(`
-        #layer{
-          marker-width: 7;
-          marker-fill: #EE4D5A;
-          marker-fill-opacity: 0.9;
-          marker-line-color: #FFFFFF;
-          marker-line-width: 1;
-          marker-line-opacity: 1;
-          marker-type: ellipse;
-          marker-allow-overlap: true;
-            }
-        #layer {
+    
+#layer {
 	  line-width: 2.5;
 	  line-color: ramp([trail_name], (#7F3C8D, #11A579, #3969AC, #F2B701, #E73F74, #80BA5A, #E68310, #008695, #A5AA99), ("Boy Scout Trail", "Brisbane Trail", "Canal Trail", "Capital to Coast Connector", "Mountain Laurel Trail", "Nature Trail", "Pine Trail", "Upper Squankum Trail"), "=");
 	  line-comp-op: overlay;
 	}
+
+#layer{
+      marker-width: 7;
+      marker-fill: #EE4D5A;
+      marker-fill-opacity: 0.9;
+      marker-line-color: #FFFFFF;
+      marker-line-width: 1;
+      marker-line-opacity: 1;
+      marker-type: ellipse;
+      marker-allow-overlap: true;
+           }
+
 	#layer::labels {
 	  text-name: [trail_name];
 	  text-face-name: 'DejaVu Sans Book';
@@ -55,7 +58,7 @@ const style = new carto.style.CartoCSS(`
 	}
 
       `);
-const layer = new carto.layer.Layer(source, style);
+const layer = new carto.layer.Layer(trails, style);
 
 
 client.addLayer(layer, style);
