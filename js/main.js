@@ -9,7 +9,6 @@ L.tileLayer('https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=6f2
 	apikey: '<6f28dfe2159642149f08dbf0cfa922a9>',
 	maxZoom: 22
 	}).addTo(map);
-console.log(map);
 
 
 
