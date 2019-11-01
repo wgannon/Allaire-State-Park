@@ -34,11 +34,24 @@ const style = new carto.style.CartoCSS(`
           marker-type: ellipse;
           marker-allow-overlap: true;
             }
-        #layer{
-          line-color: #826DBA;
-          line-width: 1.5;
-          line-opacity: 1;
-            }
+        #layer {
+	  line-width: 2.5;
+	  line-color: ramp([trail_name], (#7F3C8D, #11A579, #3969AC, #F2B701, #E73F74, #80BA5A, #E68310, #008695, #A5AA99), ("Boy Scout Trail", "Brisbane Trail", "Canal Trail", "Capital to Coast Connector", "Mountain Laurel Trail", "Nature Trail", "Pine Trail", "Upper Squankum Trail"), "=");
+	  line-comp-op: overlay;
+	}
+	#layer::labels {
+	  text-name: [trail_name];
+	  text-face-name: 'DejaVu Sans Book';
+	  text-size: 10;
+	  text-fill: #FFFFFF;
+	  text-label-position-tolerance: 0;
+	  text-halo-radius: 1;
+	  text-halo-fill: #6F808D;
+	  text-dy: -10;
+	  text-allow-overlap: true;
+	  text-placement: line;
+	  text-placement-type: dummy;
+	}
 
       `);
 const layer = new carto.layer.Layer(source, style);
