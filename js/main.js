@@ -46,5 +46,5 @@ const layer = new carto.layer.Layer(source, style);
 
 client.addLayer(layer, style);
 client.getLeafletLayer().addTo(map);
-console.log(carto.version);s
+console.log(carto.version);
 console.log(map);
