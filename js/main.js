@@ -23,6 +23,7 @@ var client = new carto.Client({
 
 // returns the version of the library
 const source = new carto.source.Dataset('allairestatepark');
+console.log(source);
 const style = new carto.style.CartoCSS(`
         #layer{
           marker-width: 7;
