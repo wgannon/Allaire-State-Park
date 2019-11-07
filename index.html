@@ -3,26 +3,31 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
-        
         <link href="lib/bootstrap/bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
             integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
             crossorigin=""/>
-
+        <link rel="stylesheet" href="lib/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
+        <nav class="navbar">
+            <span class="navbar-brand mb-0 h1">Allaire State Park</span>
+        </nav>
+        
+        
         
         <div id="mapid"></div>
-
-
         
         <!--you can also use this space for internal scripts or stylesheets;
 		place these within <script> or <style> tags-->
 
 		<!--put your extern`al script links here-->
+    <script src="https://libs.cartocdn.com/carto.js/v4.1.11/carto.js"></script>
     <script src="https://libs.cartocdn.com/carto.js/v4.1.11/carto.min.js"></script>
-
+    <script type="text/javascript" src="lib/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/bootstrap.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/bootstrap.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
             integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
             crossorigin=""></script>
