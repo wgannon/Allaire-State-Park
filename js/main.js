@@ -2,6 +2,9 @@
 /* For Project 2 Allaire State Park */
 
 //Get Map Tiles and Center Map
+function main(){
+
+  //define map object
 var map = L.map('mapid').setView([40.159275,  -74.130852], 16);
 
 L.tileLayer('https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=6f28dfe2159642149f08dbf0cfa922a9', {
@@ -20,10 +23,8 @@ var client = new carto.Client({
     username: 'wgannon42'
 });
 
- 
 // returns the version of the library
 const trails_source = new carto.source.Dataset('allaire_trails');
-console.log(trails_source);
 const trails_style = new carto.style.CartoCSS(`
    #layer {
           line-width: 2.5;
@@ -48,7 +49,6 @@ const trails_style = new carto.style.CartoCSS(`
 
 
 const points_source = new carto.source.Dataset('allaire_points');
-console.log(points_source);
 const points_style = new carto.style.CartoCSS(`
    #layer {
   marker-width: 7;
@@ -61,13 +61,24 @@ const points_style = new carto.style.CartoCSS(`
     }
       `);
 
-const trails_layer = new carto.layer.Layer(trails_source, trails_style);
-console.log(trails_layer);
+const trails_layer = new carto.layer.Layer(trails_source, trails_style, {
+  featureOverColumns: ['trail_name']
+});
 const points_layer = new carto.layer.Layer(points_source, points_style);
-console.log(points_layer);
 
+const popup = L.popup({ closeButton: false });
+trails_layer.on(carto.layer.events.FEATURE_OVER, featureEvent => {
+  popup.setLatLng(featureEvent.latLng);
+  if (!popup.isOpen()) {
+    popup.setContent(featureEvent.data.trail_name);
+    popup.openOn(map);
+  }
+});
 
 client.addLayers([trails_layer, points_layer]);
 client.getLeafletLayer().addTo(map);
-console.log(carto.version);
+
 console.log(map);
+
+  }
+ window.onload = main; 
