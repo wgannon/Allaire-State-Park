@@ -62,21 +62,45 @@ const points_style = new carto.style.CartoCSS(`
       `);
 
 const trails_layer = new carto.layer.Layer(trails_source, trails_style, {
-  featureOverColumns: ['trail_name']
+  featureClickColumns: ['trail_name', 'trl_diff']
 });
-const points_layer = new carto.layer.Layer(points_source, points_style);
-
-const popup = L.popup({ closeButton: false });
-trails_layer.on(carto.layer.events.FEATURE_OVER, featureEvent => {
-  popup.setLatLng(featureEvent.latLng);
-  if (!popup.isOpen()) {
-    popup.setContent(featureEvent.data.trail_name);
-    popup.openOn(map);
-  }
+const points_layer = new carto.layer.Layer(points_source, points_style, {
+  featureClickColumns: ['feature_ty']
 });
 
 client.addLayers([trails_layer, points_layer]);
 client.getLeafletLayer().addTo(map);
+
+const popup = L.popup({ closeButton: false });
+trails_layer.on(carto.layer.events.FEATURE_CLICKED, featureEvent => {
+  popup.setLatLng(featureEvent.latLng);
+  if (!popup.isOpen()) {
+    popup.setContent("Trail Name: " + featureEvent.data.trail_name + "<br/>" + "Dificulty: " + featureEvent.data.trl_diff);
+    popup.openOn(map);
+  }
+});
+trails_layer.on(carto.layer.events.FEATURE_OUT, featureEvent => {
+  popup.removeFrom(map);
+});
+
+const point_popup = L.popup({ closeButton: false });
+points_layer.on(carto.layer.events.FEATURE_CLICKED, featureEvent => {
+  point_popup.setLatLng(featureEvent.latLng);
+  if (!point_popup.isOpen()) {
+    point_popup.setContent("Feature: " + featureEvent.data.feature_ty);
+    point_popup.openOn(map);
+  }
+});
+points_layer.on(carto.layer.events.FEATURE_OUT, featureEvent => {
+  point_popup.removeFrom(map);
+});
+
+const viz = new carto.Viz(`
+    width: 7
+    color: ramp($weather, [darkorange, darkviolet, darkturquoise])
+    strokeWidth: 0.2
+    strokeColor: black
+`);
 
 console.log(map);
 
