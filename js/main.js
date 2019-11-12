@@ -23,6 +23,7 @@ var client = new carto.Client({
     username: 'wgannon42'
 });
 
+
 // returns the version of the library
 const trails_source = new carto.source.Dataset('allaire_trails');
 const trails_style = new carto.style.CartoCSS(`
@@ -95,12 +96,17 @@ points_layer.on(carto.layer.events.FEATURE_OUT, featureEvent => {
   point_popup.removeFrom(map);
 });
 
-const viz = new carto.Viz(`
-    width: 7
-    color: ramp($weather, [darkorange, darkviolet, darkturquoise])
-    strokeWidth: 0.2
-    strokeColor: black
-`);
+showTrails = true
+
+var toggleTrails = function(){
+  if(showTrials === true){
+    $('.container').hide();
+    showTrails = false;
+  }else{
+    $('.container').show();
+    showTrails = true;
+  }
+}
 
 console.log(map);
 
