@@ -96,15 +96,23 @@ points_layer.on(carto.layer.events.FEATURE_OUT, featureEvent => {
   point_popup.removeFrom(map);
 });
 
-    
+ 
 
+//Legend Checkboxes to show and hide layers
     
-$('#legend').on('change', ':checkbox', function(){
+$('#trails').on('change', ':checkbox', function(){
     if($(this).is(':checked')) {
        client.addLayers([trails_layer]);
     }else{
         client.removeLayers([trails_layer]);   
     }
+});
+$('#points').on('change', ':checkbox', function(){
+  if($(this).is(':checked')) {
+     client.addLayers([points_layer]);
+  }else{
+      client.removeLayers([points_layer]);   
+  }
 });
 console.log(map);
   }
