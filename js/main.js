@@ -96,19 +96,16 @@ points_layer.on(carto.layer.events.FEATURE_OUT, featureEvent => {
   point_popup.removeFrom(map);
 });
 
-showTrails = true
+    
 
-var toggleTrails = function(){
-  if(showTrials === true){
-    $('.container').hide();
-    showTrails = false;
-  }else{
-    $('.container').show();
-    showTrails = true;
-  }
-}
-
+    
+$('#legend').on('change', ':checkbox', function(){
+    if($(this).is(':checked')) {
+       client.addLayers([trails_layer]);
+    }else{
+        client.removeLayers([trails_layer]);   
+    }
+});
 console.log(map);
-
   }
  window.onload = main; 
