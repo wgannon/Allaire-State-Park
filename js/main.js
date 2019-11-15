@@ -96,8 +96,26 @@ points_layer.on(carto.layer.events.FEATURE_OUT, featureEvent => {
   point_popup.removeFrom(map);
 });
 
- 
+//Adding data to the carto dataase
+    //http://duspviz.mit.edu/web-map-workshop/cartodb-data-collection/
+var cartoPoints = null;
 
+var cartoUsername = "wgannon42";    
+
+var sqlQuery = "SELECT * FROM report";
+//link to getting the Json of files https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT%20*FROM%20report    
+    
+function getGeoJSON(){
+  $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM report", function(data) {
+    cartoPoints = L.geoJson(data,{
+      pointToLayer: function(feature,latlng){
+        var marker = L.marker(latlng);
+        marker.bindPopup('' + feature.properties.description + 'Submitted by ' + feature.properties.name + '');
+        return marker;
+      }
+    }).addTo(map);
+  });
+};      
 //Legend Checkboxes to show and hide layers
     
 $('#trails').on('change', ':checkbox', function(){
