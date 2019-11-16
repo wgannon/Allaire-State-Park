@@ -12,9 +12,10 @@ var client = new carto.Client({
 });
 
 
-// returns the version of the library
+// layer group layers
 var trails = L.layerGroup();
 var points = L.layerGroup();
+var reports = L.layerGroup();
 
 //----------------------------------------------------------------------
 
@@ -27,7 +28,7 @@ var points = L.layerGroup();
   var map = L.map('map', {
     center: [40.159275,  -74.130852],
     zoom: 16,
-    layers: [basemap, trails, points]
+    layers: [basemap, trails, points,reports]
   });
   
   var baseMaps = {
@@ -35,7 +36,8 @@ var points = L.layerGroup();
   };
   var overlayMaps = {
     "trails":trails,
-    "points":points
+    "points":points,
+    "reports":reports
   };
   L.control.layers(baseMaps,overlayMaps).addTo(map);
 //----------------------------------------------------------------------  
@@ -62,14 +64,12 @@ function style_points(data) {
 };  
 
 $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM report", function(data) {
-    reportPoints = L.geoJson(data,{
-      pointToLayer: function(feature,latlng){
-        var marker = L.marker(latlng);
-        marker.bindPopup('' + feature.properties.description + 'Submitted by ' + feature.properties.name + '');
-        return marker;
-      }
-    }).addTo(map);
-    console.log(reportPoints);
+    report_points = L.geoJson(data,{ 
+    style: style_points
+    }).bindPopup(function (layer) {
+      return layer.feature.properties.description; 
+    }).addTo(reports);
+    console.log(report_points);
   });
   
 $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM allaire_trails", function(data) {
@@ -107,9 +107,9 @@ $('#points').on('change', ':checkbox', function(){
 });
 $('#reports').on('change', ':checkbox', function(){
   if($(this).is(':checked')) {
-     client.addLayers([points_layer]);
+    map.addLayer(reports);
   }else{
-      client.removeLayers([points_layer]);   
+    map.removeLayer(reports);   
   }
 });
 //console.log(map);
