@@ -2,66 +2,117 @@
 /* For Project 2 Allaire State Park */
 
 //Get Map Tiles and Center Map
-var map = L.map('mapid').setView([40.159275,  -74.130852], 16);
-
-L.tileLayer('https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=6f28dfe2159642149f08dbf0cfa922a9', {
-    attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	apikey: '<6f28dfe2159642149f08dbf0cfa922a9>',
-	maxZoom: 22
-	}).addTo(map);
-
-
-
+function main(){
 
 //connect to dataset
 //call carto client
 var client = new carto.Client({
-    apiKey: 'PUzc3fQC_OgJS8Ppcp1h2Q',
+    apiKey: 'hOoKOiroadj3UzrLaXpPWQ',
     username: 'wgannon42'
 });
 
 
-// returns the version of the library
-const trails = new carto.source.Dataset('allairestatepark');
-console.log(trails);
-const style = new carto.style.CartoCSS(`
+// layer group layers
+var trails = L.layerGroup();
+var points = L.layerGroup();
+var reports = L.layerGroup();
+
+//----------------------------------------------------------------------
+
+  //define map object
+  var basemap = L.tileLayer('https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=6f28dfe2159642149f08dbf0cfa922a9', {
+                attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                apikey: '<6f28dfe2159642149f08dbf0cfa922a9>'
+                });
+  
+  var map = L.map('map', {
+    center: [40.159275,  -74.130852],
+    zoom: 16,
+    layers: [basemap, trails, points,reports]
+  });
+  
+  var baseMaps = {
+    "Basemap": basemap
+  };
+  var overlayMaps = {
+    "trails":trails,
+    "points":points,
+    "reports":reports
+  };
+  L.control.layers(baseMaps,overlayMaps).addTo(map);
+//----------------------------------------------------------------------  
+//Adding data to the carto dataase
+    //http://duspviz.mit.edu/web-map-workshop/cartodb-data-collection/
+var cartoPoints = null;
+
+//link to getting the Json of files https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT%20*FROM%20report    
+function style_trails(data) {
+  return {
+    color: '#855C75',
+    weight: 3,
+    opacity: .7,
+    dashArray: '20,15',
+    lineJoin: 'round'
+  };
+}; 
+function style_points(data) {
+  return {
+    color: '#855C75',
+    weight: 3,
+    opacity: .7
+  };
+};  
+
+$.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM report", function(data) {
+    report_points = L.geoJson(data,{ 
+    style: style_points
+    }).bindPopup(function (layer) {
+      return layer.feature.properties.description; 
+    }).addTo(reports);
+    console.log(report_points);
+  });
+  
+$.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM allaire_trails", function(data) {
+    allaire_trails = L.geoJson(data,{ 
+    style: style_trails
+    }).bindPopup(function (layer) {
+      return layer.feature.properties.trail_name; 
+    }).addTo(trails);
+    console.log(allaire_trails);
+  });
+$.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM allaire_points", function(data) {
+    allaire_points = L.geoJson(data,{ 
+    style: style_points
+    }).bindPopup(function (layer) {
+      return layer.feature.properties.feature_na; 
+    }).addTo(points);
+    console.log(allaire_points);
+  });
+  
+//Legend Checkboxes to show and hide layers
     
-#layer {
-	  line-width: 2.5;
-	  line-color: ramp([trail_name], (#7F3C8D, #11A579, #3969AC, #F2B701, #E73F74, #80BA5A, #E68310, #008695, #A5AA99), ("Boy Scout Trail", "Brisbane Trail", "Canal Trail", "Capital to Coast Connector", "Mountain Laurel Trail", "Nature Trail", "Pine Trail", "Upper Squankum Trail"), "=");
-	  line-comp-op: overlay;
-	}
+$('#trails').on('change', ':checkbox', function(){
+    if($(this).is(':checked')) {
+      map.addLayer(trails);
+    }else{
+      map.removeLayer(trails);  
+    }
+});
+$('#points').on('change', ':checkbox', function(){
+  if($(this).is(':checked')) {
+    map.addLayer(points);
+  }else{
+    map.removeLayer(points);   
+  }
+});
+$('#reports').on('change', ':checkbox', function(){
+  if($(this).is(':checked')) {
+    map.addLayer(reports);
+  }else{
+    map.removeLayer(reports);   
+  }
+});
+//console.log(map);
+  }
+ window.onload = main; 
 
-#layer{
-      marker-width: 7;
-      marker-fill: #EE4D5A;
-      marker-fill-opacity: 0.9;
-      marker-line-color: #FFFFFF;
-      marker-line-width: 1;
-      marker-line-opacity: 1;
-      marker-type: ellipse;
-      marker-allow-overlap: true;
-           }
-
-	#layer::labels {
-	  text-name: [trail_name];
-	  text-face-name: 'DejaVu Sans Book';
-	  text-size: 10;
-	  text-fill: #FFFFFF;
-	  text-label-position-tolerance: 0;
-	  text-halo-radius: 1;
-	  text-halo-fill: #6F808D;
-	  text-dy: -10;
-	  text-allow-overlap: true;
-	  text-placement: line;
-	  text-placement-type: dummy;
-	}
-
-      `);
-const layer = new carto.layer.Layer(trails, style);
-
-
-client.addLayer(layer, style);
-client.getLeafletLayer().addTo(map);
-console.log(carto.version);
-console.log(map);
