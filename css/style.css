@@ -4,7 +4,20 @@ body, html {
   height: 100%;
   width: 100%;
 }
-#mapid{
+.navbar{
+  background-color: burlywood;
+	margin-bottom:0;
+}
+#map{
     width: 100%; 
     height: 100%;
+    position: relative;
+    z-index: 0;
+}
+.box{
+    position:relative;
+    z-index: 1;
+}
+label.reports{
+
 }
