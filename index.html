@@ -1,32 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+        <title>Allaire State Park</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width">
-        
         <link href="lib/bootstrap/bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
             integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
             crossorigin=""/>
-
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+        <link href="https://carto.com/developers/carto-vl/v1.4.2/examples/maps/style.css" rel="stylesheet">    
+        <link rel="stylesheet" href="lib/bootstrap/bootstrap.min.css">
         <link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
+        <nav class="navbar">
+            <span class="navbar-brand mb-0 h1">Allaire State Park</span>
+        </nav>
+        <aside class="toolbox">
+            <div class="box">
+                <header>
+                <h1>Points of Interest</h1>
+                <label id="trails" class="container">
+                    <input id="trails" type="checkbox" name='trails' checked="checked">
+                    <span class="checkmark"></span> Trails
+                    <!--Where the Legend Items Will Go-->
+                    </br>
+                </label>
+                <label id="points" class="container">
+                    <input type="checkbox" name="points" checked="checked">
+                    <span class="checkmark"></span> Points
+                    </br>
+                </label>
+                <label id="reports" class="container">
+                    <input type="checkbox" name="points" checked="checked">
+                    <span class="checkmark"></span> Reports
+                </label>
+                </header>
+        </div>
+        </aside>
         
-        <div id="mapid"></div>
- 	<span class="Legend-categoryCircle" style="opacity:1; background: #826DBA;"></span>
-
+        
+        <div id="map"></div>
         
         <!--you can also use this space for internal scripts or stylesheets;
 		place these within <script> or <style> tags-->
 
 		<!--put your extern`al script links here-->
+    
+    <script src="https://libs.cartocdn.com/carto.js/v4.1.11/carto.js"></script>
     <script src="https://libs.cartocdn.com/carto.js/v4.1.11/carto.min.js"></script>
-
+    <script type="text/javascript" src="lib/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/bootstrap.js"></script>
+    <script type="text/javascript" src="lib/bootstrap/bootstrap.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
             integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
             crossorigin=""></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
         
 	</body>
