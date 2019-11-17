@@ -151,7 +151,7 @@ $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM
     }).addTo(trails);
     console.log(allaire_trails);
   });
-$.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM allaire_points", function(data) {
+$.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM allaire_points WHERE feature_ty IN ('Restroom', 'Picnic Area', 'Parking', 'Park Building', 'Nature Feature', 'Historic Site', 'Fishing', 'Canoe', 'Entrance', 'Concession', 'Campground'); ", function(data) {
     allaire_points = L.geoJson(data,{ 
     pointToLayer: function(feature,latlng){
       p_type = feature.properties.feature_ty;
