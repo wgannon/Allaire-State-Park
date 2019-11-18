@@ -18,6 +18,31 @@ body, html {
     position:relative;
     z-index: 1;
 }
-label.reports{
+p{
+  display: inline;
+}
 
+#Pine{
+  color: #002654;
+}
+#Canal{
+  color: #8C2633;
+}
+#Mountain_Laurel{
+  color: #F47A38;
+}
+#Nature{
+  color: #FFB81C;
+}
+#Boy_Scout{
+  color: #C8102E;
+}
+#Brisbane{
+  color: #8F8F8C;
+}
+#Capital_to_Coast{
+  color: #6FF63D;
+}
+#Upper_Squankum{
+  color: #0038A8;
 }
