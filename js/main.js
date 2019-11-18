@@ -65,7 +65,7 @@ function style_lines(c) {
     var color1 = "#8F8F8C"
     return color1;
   } else if (c==="Capital to Coast Connector"){
-    var color1 = "#6F263D"
+    var color1 = "#6FF63D"
     return color1;
   } else if (c==="Upper Squankum Trail"){
     var color1 = "#0038A8"
@@ -193,4 +193,3 @@ $('#reports').on('change', ':checkbox', function(){
 //console.log(map);
   }
  window.onload = main; 
-
