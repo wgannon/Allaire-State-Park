@@ -19,7 +19,7 @@ var reports = L.layerGroup();
 
 var config = {
   cartoUsername : "wgannon42",
-  cartoInsertFunction : "insert_park_goer_data",
+  cartoInsertFunction : "INSERT INTO report (the_geom, name, description, date) values (",
   cartoTablename : "report",
   mapcenter: [40.159275, -74.130852],
   drawOptions: {
@@ -30,7 +30,7 @@ var config = {
     remove: false
   }
 };
-var cartodata
+var cartoData = null;
 //----------------------------------------------------------------------
 
   //define map object
@@ -44,20 +44,25 @@ var cartodata
     zoom: 16,
     layers: [basemap, trails, points, reports]
   });
-  
+
+
+var controlMap = false;
+
+// Function to add the draw control to the map to start editing
+
+/*
   var baseMaps = {
     "Basemap": basemap
   };
-  var overlayMaps = {
+var overlayMaps = {
     "trails":trails,
     "points":points,
     "reports":reports
-  };
-  //L.control.layers(baseMaps,overlayMaps).addTo(map); //A different style layer manager
+  }; */
+//L.control.layers().addTo(map); //A different style layer manager
 //----------------------------------------------------------------------  
 //Adding data to the carto dataase
     //http://duspviz.mit.edu/web-map-workshop/cartodb-data-collection/
-var cartoPoints = null;
 
 function style_lines(c) {
   if (c ==="Mountain Laurel Trail"){
@@ -166,6 +171,8 @@ $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM
     pointToLayer: function(feature,latlng){
       p_type = feature.properties.feature_ty;
       var marker = L.marker(latlng, {icon: styleIcons(p_type)});
+      console.log(feature);
+      console.log(latlng);
       return marker;
       
     }
@@ -174,6 +181,134 @@ $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM
     }).addTo(points);
   });
   
+  var drawnItems = new L.FeatureGroup();
+  // Create Leaflet Draw Control for the draw tools and toolbox  
+  var drawControl = new L.Control.Draw({
+    position: 'bottomleft',
+    draw : {
+      polygon : false,
+      polyline : false,
+      rectangle : false,
+      circle : false
+    },
+    edit : false,
+    remove: false
+  }); 
+  var controlOnMap = false;
+$('#startEdits').click (function(){
+    if (controlOnMap === true) {
+      map.removeControl(drawControl);
+      controlOnMap = false;
+    }
+    map.addControl(drawControl);
+    controlOnMap = true;
+});
+$('#stopEdits').click (function(){
+    map.removeControl(drawControl);
+    controlOnMap = false;
+});
+// create form for leaflet draw control
+map.on(L.Draw.Event.CREATED, function (e) {
+
+    var layer = e.layer;
+    map.addLayer(drawnItems);
+    drawnItems.addLayer(layer);
+    dialog.dialog("open");
+
+});
+
+// Use the jQuery UI dialog to create a dialog and set options
+var dialog = $("#dialog").dialog({
+  autoOpen: false,
+  height: 300,
+  width: 350,
+  modal: true,
+  position: {
+    my: "center center",
+    at: "center center",
+    of: "#map"
+  },
+  buttons: {
+    "Add to Database": setData,
+    Cancel: function() {
+      dialog.dialog("close");
+      refreshLayer();
+    }
+  },
+  close: function() {
+    form[ 0 ].reset();
+    console.log("Dialog closed");
+  }
+});
+
+// Stops default form submission and ensures that setData or the cancel function run
+var form = dialog.find("form").on("submit", function(event) {
+  event.preventDefault();
+});
+
+function setData() {
+  var enteredUsername = username.value;
+  var enteredDescription =description.value;
+  //console.log(coordinates);
+  var date = '2017-04-30';
+  drawnItems.eachLayer(function (layer) {
+  
+  var coord = "ST_SetSRID(ST_Point(" + layer._latlng.lng+ ","+ layer._latlng.lat + "),4326)";
+  console.log(coord);
+  //Convert the drawing to a GeoJSON to pass to the Carto sql database
+    
+      //Construct the SQL query to insert data from the three parameters: the drawing, the input username, and the input description of the drawn shape
+    sql = config.cartoInsertFunction;
+      sql += coord;
+      sql += "," + "'"+enteredUsername+"'";
+      sql += "," + "'"+enteredDescription+"'";
+      sql += "," + "'"+date +"'";
+      sql += ")"+"&api_key=hOoKOiroadj3UzrLaXpPWQ";
+
+
+    console.log(sql);
+    //Sending the data
+    $.ajax({
+      type: 'POST',
+      url: 'https://wgannon42.carto.com/api/v2/sql',
+      crossDomain: true,
+      data: {"q": sql},
+      dataType: 'json',
+      success: function (data) {
+        var urlcomp = url+data
+        console.log(urlcomp);
+        console.log("Data saved");
+      },
+      error: function (responseData, textStatus, errorThrown) {
+        console.log(responseData);
+        console.log("Problem saving the data");
+      }
+    });
+
+    /* 
+    * Transfer submitted drawing to the Carto layer, this results in the user's data appearing on the map without
+    * requerying the database (see the refreshLayer() function for an alternate way of doing this) 
+    */
+    var newData = layer.toGeoJSON();
+      newData.properties.description = description.value;
+      newData.properties.name = username.value;
+
+    cartoData.addData(newData);
+
+  });
+  
+  dialog.dialog("close");
+}
+function refreshLayer() {
+  console.log("drawnItems has been cleared");
+  map.removeLayer(drawnItems);
+  drawnItems = new L.FeatureGroup();
+/* 
+  This would refresh the data-layer to include new data from the Carto table after each drawing is submitted. 
+*/
+}
+
+//------------------------------------------------------------------------------------------
 //Legend Checkboxes to show and hide layers
     
 $('#trails').on('change', ':checkbox', function(){
@@ -197,6 +332,8 @@ $('#reports').on('change', ':checkbox', function(){
     map.removeLayer(reports);   
   }
 });
+
+
 //console.log(map);
   }
  window.onload = main; 
