@@ -17,6 +17,20 @@ var trails = L.layerGroup();
 var points = L.layerGroup();
 var reports = L.layerGroup();
 
+var config = {
+  cartoUsername : "wgannon42",
+  cartoInsertFunction : "insert_park_goer_data",
+  cartoTablename : "report",
+  mapcenter: [40.159275, -74.130852],
+  drawOptions: {
+    draw : {
+      marker: true
+    },
+    edit : false,
+    remove: false
+  }
+};
+var cartodata
 //----------------------------------------------------------------------
 
   //define map object
@@ -115,28 +129,24 @@ function styleIcons(I) {
     console.log("Icon" + I + " Had an error");
   }
 };
-function style_points(feature) {
-  return {
-    color: '#855C75',
-    weight: 3,
-    opacity: .7
-  };
-};  
-
+  
+// REquest getting the reports information from carto
 $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM report", function(data) {
     report_points = L.geoJson(data,{
-    style: style_points
+    pointToLayer: function(feature,latlng){
+      reportsIcon = L.icon({iconUrl: 'png/report-icon.png'});
+      var marker = L.marker(latlng,{icon: reportsIcon});
+      return marker;
+    }
     }).bindPopup(function (layer) {
       return layer.feature.properties.description; 
     }).addTo(reports);
-    console.log(report_points);
   });
-  
+ //request getting the trails data from carto 
 $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM allaire_trails", function(data) {
     allaire_trails = L.geoJson(data,{ 
     style: function (feature){
       t_name = feature.properties.trail_name;
-      console.log(t_name);
       return {
         color: style_lines(t_name),
         weight: 3,
@@ -149,22 +159,19 @@ $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM
     }).bindPopup(function (layer) {
       return layer.feature.properties.trail_name; 
     }).addTo(trails);
-    console.log(allaire_trails);
   });
+//Request getting the points from carto
 $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM allaire_points WHERE feature_ty IN ('Restroom', 'Picnic Area', 'Parking', 'Park Building', 'Nature Feature', 'Historic Site', 'Fishing', 'Canoe', 'Entrance', 'Concession', 'Campground'); ", function(data) {
     allaire_points = L.geoJson(data,{ 
     pointToLayer: function(feature,latlng){
       p_type = feature.properties.feature_ty;
-      console.log(p_type);
       var marker = L.marker(latlng, {icon: styleIcons(p_type)});
-      console.log(marker);
       return marker;
       
     }
     }).bindPopup(function (layer) {
       return layer.feature.properties.feature_ty + ": " + layer.feature.properties.feature_na; 
     }).addTo(points);
-    console.log(allaire_points);
   });
   
 //Legend Checkboxes to show and hide layers

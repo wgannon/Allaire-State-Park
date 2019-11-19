@@ -10,7 +10,7 @@ body, html {
 }
 #map{
     width: 100%; 
-    height: 100%;
+    height: 94%;
     position: relative;
     z-index: 0;
 }
@@ -24,6 +24,7 @@ p{
 
 #Pine{
   color: #002654;
+
 }
 #Canal{
   color: #8C2633;

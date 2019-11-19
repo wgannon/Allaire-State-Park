@@ -3,7 +3,7 @@
 	<head>
         <title>Allaire State Park</title>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="lib/bootstrap/bootstrap.css" rel="stylesheet">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
             integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
+        
         <nav class="navbar">
             <span class="navbar-brand mb-0 h1">Allaire State Park</span>
         </nav>
@@ -38,13 +39,31 @@
                 <label id="points" class="container">
                     <input type="checkbox" name="points" checked="checked">
                     <span class="checkmark"></span> Points
-                    
+                    </br>
+                    <p><img src="png/camping-icon.png"> Campground&emsp;&nbsp;</p>
+                    <img src="png/canoe-icon.png"> Canoe
+                    </br>
+                    <p><img src="png/shop-icon.png">Concession&emsp;&emsp;&nbsp;</p>
+                    <img src="png/enter-icon.png">Entrance
+                    </br>
+                    <p><img src="png/fishing-icon.png">Fishing&nbsp;&emsp;&emsp;&emsp;&emsp;</p>
+                    <img src="png/historic-icon.png">Historic Site
+                    <br/>
+                    <p><img src="png/nature-icon.png">Nature Feature&emsp;</p>
+                    <img src="png/info-icon.png">Park Building
+                    </br>
+                    <p><img src="png/parking-icon.png">Parking&emsp;&emsp;&emsp;&emsp;</p>
+                    <img src="png/picnic-icon.png">Picnic Area
+                    </br>
+                    <img src="png/restroom-icon.png">Restroom
                     </br>
                     </br>
                 </label>
                 <label id="reports" class="container">
                     <input type="checkbox" name="points" checked="checked">
-                    <span class="checkmark"></span> Reports
+                    <span class="checkmark"></span> Reports <img src="png/report-icon.png"></br>
+                <input type="button" onclick="startEdits()" value="AddReport">
+                <input type="button" onclick="stopEdits()" value="StopReport">
                 </label>
                 </header>
         </div>
