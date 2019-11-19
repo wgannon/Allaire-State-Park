@@ -14,7 +14,6 @@
         <link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-        
         <nav class="navbar">
             <span class="navbar-brand mb-0 h1">Allaire State Park</span>
         </nav>
@@ -61,16 +60,31 @@
                 </label>
                 <label id="reports" class="container">
                     <input type="checkbox" name="points" checked="checked">
-                    <span class="checkmark"></span> Reports <img src="png/report-icon.png"></br>
-                <input type="button" onclick="startEdits()" value="AddReport">
-                <input type="button" onclick="stopEdits()" value="StopReport">
+                    <span class="checkmark"></span> <img src="png/report-icon.png"> Reports </br>
+                    <label id="startEdits" class="container" style='display: inline'>
+                        <input type="button" value="Start Report"></label>
+                    <label id="stopEdits">
+                        <input type="button"value="Stop Report">
+                    </label>
                 </label>
                 </header>
         </div>
         </aside>
         
         <div id="map"></div>
-        
+        <div id="dialog" title="What are you reporting?">     
+            <form>
+                <fieldset style="border: none;">
+                <ul style="list-style-type: none; padding-left: 0px">
+                    <li><label for="username">Your Name</label></li>
+                    <li><input type="text" name="username" id="username" placeholder="Enter your name" class="text ui-widget-content ui-corner-all"></li>
+                    <li><label for="description">About this</label></li>
+                    <li><input type="text" name="description" id="description" placeholder="Description for this point" class="text ui-widget-content ui-corner-all"></li>
+                </ul>
+                <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+                </fieldset>
+            </form>
+        </div>
         <!--you can also use this space for internal scripts or stylesheets;
 		place these within <script> or <style> tags-->
 
@@ -79,6 +93,10 @@
     <script src="https://libs.cartocdn.com/carto.js/v4.1.11/carto.js"></script>
     <script src="https://libs.cartocdn.com/carto.js/v4.1.11/carto.min.js"></script>
     <script type="text/javascript" src="lib/jquery-3.3.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"
+            integrity="sha256-DI6NdAhhFRnO2k51mumYeDShet3I8AKCQf/tf7ARNhI="
+            crossorigin="anonymous"></script>
     <script type="text/javascript" src="lib/bootstrap/bootstrap.js"></script>
     <script type="text/javascript" src="lib/bootstrap/bootstrap.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
