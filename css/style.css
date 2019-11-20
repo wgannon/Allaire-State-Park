@@ -18,10 +18,14 @@ body, html {
     position:relative;
     z-index: 1;
 }
+.dialog{
+
+    background-color: aliceblue;
+}
 p{
   display: inline;
 }
-
+}
 #Pine{
   color: #002654;
 

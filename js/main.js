@@ -7,7 +7,7 @@ function main(){
 //connect to dataset
 //call carto client if needed for certain operations
 var client = new carto.Client({
-    apiKey: 'hOoKOiroadj3UzrLaXpPWQ',
+    apiKey: 'my1W1tvAgI0O8rfr2RsAvA',
     username: 'wgannon42'
 });
 
@@ -16,10 +16,10 @@ var client = new carto.Client({
 var trails = L.layerGroup();
 var points = L.layerGroup();
 var reports = L.layerGroup();
-
+    
 var config = {
   cartoUsername : "wgannon42",
-  cartoInsertFunction : "INSERT INTO report (the_geom, name, description, date) values (",
+  cartoInsertFunction : "INSERT INTO report (the_geom, name, description, date) VALUES (",
   cartoTablename : "report",
   mapcenter: [40.159275, -74.130852],
   drawOptions: {
@@ -42,24 +42,11 @@ var cartoData = null;
   var map = L.map('map', {
     center: [40.159275,  -74.130852],
     zoom: 16,
+    zoomControl: true,
     layers: [basemap, trails, points, reports]
   });
-
-
 var controlMap = false;
 
-// Function to add the draw control to the map to start editing
-
-/*
-  var baseMaps = {
-    "Basemap": basemap
-  };
-var overlayMaps = {
-    "trails":trails,
-    "points":points,
-    "reports":reports
-  }; */
-//L.control.layers().addTo(map); //A different style layer manager
 //----------------------------------------------------------------------  
 //Adding data to the carto dataase
     //http://duspviz.mit.edu/web-map-workshop/cartodb-data-collection/
@@ -136,7 +123,7 @@ function styleIcons(I) {
 };
   
 // REquest getting the reports information from carto
-$.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM report", function(data) {
+$.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM report WHERE date >= current_date - interval'1 day'", function(data) {
     report_points = L.geoJson(data,{
     pointToLayer: function(feature,latlng){
       reportsIcon = L.icon({iconUrl: 'png/report-icon.png'});
@@ -171,8 +158,6 @@ $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM
     pointToLayer: function(feature,latlng){
       p_type = feature.properties.feature_ty;
       var marker = L.marker(latlng, {icon: styleIcons(p_type)});
-      console.log(feature);
-      console.log(latlng);
       return marker;
       
     }
@@ -249,12 +234,13 @@ var form = dialog.find("form").on("submit", function(event) {
 function setData() {
   var enteredUsername = username.value;
   var enteredDescription =description.value;
-  //console.log(coordinates);
-  var date = '2017-04-30';
+    var ts = new Date();
+    
+  var date = "'"+ ts.toLocaleDateString()+"'";
+    console.log()
   drawnItems.eachLayer(function (layer) {
   
   var coord = "ST_SetSRID(ST_Point(" + layer._latlng.lng+ ","+ layer._latlng.lat + "),4326)";
-  console.log(coord);
   //Convert the drawing to a GeoJSON to pass to the Carto sql database
     
       //Construct the SQL query to insert data from the three parameters: the drawing, the input username, and the input description of the drawn shape
@@ -262,25 +248,23 @@ function setData() {
       sql += coord;
       sql += "," + "'"+enteredUsername+"'";
       sql += "," + "'"+enteredDescription+"'";
-      sql += "," + "'"+date +"'";
-      sql += ")"+"&api_key=hOoKOiroadj3UzrLaXpPWQ";
+      sql += "," + date ;
+      sql += ")";
 
 
-    console.log(sql);
+console.log(sql);
     //Sending the data
     $.ajax({
       type: 'POST',
       url: 'https://wgannon42.carto.com/api/v2/sql',
       crossDomain: true,
-      data: {"q": sql},
+      data: {"q": sql, "api_key": 'my1W1tvAgI0O8rfr2RsAvA'},
       dataType: 'json',
-      success: function (data) {
-        var urlcomp = url+data
-        console.log(urlcomp);
+      success: function (responseData, textStatus, errorThrown) {
         console.log("Data saved");
+        dialog.dialog("close");
       },
       error: function (responseData, textStatus, errorThrown) {
-        console.log(responseData);
         console.log("Problem saving the data");
       }
     });
@@ -289,11 +273,6 @@ function setData() {
     * Transfer submitted drawing to the Carto layer, this results in the user's data appearing on the map without
     * requerying the database (see the refreshLayer() function for an alternate way of doing this) 
     */
-    var newData = layer.toGeoJSON();
-      newData.properties.description = description.value;
-      newData.properties.name = username.value;
-
-    cartoData.addData(newData);
 
   });
   
@@ -333,7 +312,5 @@ $('#reports').on('change', ':checkbox', function(){
   }
 });
 
-
-//console.log(map);
   }
  window.onload = main; 
