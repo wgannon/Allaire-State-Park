@@ -169,7 +169,7 @@ $.getJSON("https://wgannon42.carto.com/api/v2/sql?format=GeoJSON&q=SELECT * FROM
   var drawnItems = new L.FeatureGroup();
   // Create Leaflet Draw Control for the draw tools and toolbox  
   var drawControl = new L.Control.Draw({
-    position: 'bottomleft',
+    position: 'topleft',
     draw : {
       polygon : false,
       polyline : false,
