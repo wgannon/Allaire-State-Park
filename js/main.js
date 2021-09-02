@@ -3,8 +3,28 @@
 
 //Get Map Tiles and Center Map
 function main(){
-
 //connect to dataset
+//connect to mongodb
+const app = new Realm.App({id:"allairemap-cnjsn"})
+//console.log(app);
+// Create an anonymous credential
+async function loginAnonymous(){
+  const credentials = Realm.Credentials.anonymous();
+  try {
+    // Authenticate the user
+    const user = await app.logIn(credentials);
+    
+    // `App.currentUser` updates to match the logged in user
+    assert(user.id === app.currentUser.id);
+    return user
+    
+  } catch(err) {
+    console.error("Failed to log in", err);
+  }
+}
+
+
+
 //call carto client if needed for certain operations
 var client = new carto.Client({
     apiKey: 'my1W1tvAgI0O8rfr2RsAvA',
